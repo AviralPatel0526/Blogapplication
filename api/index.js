@@ -118,6 +118,42 @@ app.get('/post/:id', async (req, res) => {
         res.status(500).json({ error: 'Error fetching post' });
     }
 });
+app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+    let newPath = null;
+    if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
+    }
+
+    const { token } = req.cookies;
+    jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+        const { id, title, summary, content } = req.body;
+        try {
+            const postDoc = await Post.findById(id);
+            if (!postDoc) return res.status(404).json('Post not found');
+
+            const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+            if (!isAuthor) {
+                return res.status(403).json('You are not the author');
+            }
+
+            postDoc.title = title;
+            postDoc.summary = summary;
+            postDoc.content = content;
+            if (newPath) postDoc.cover = newPath;
+
+            await postDoc.save(); 
+            res.json(postDoc);
+        } catch (e) {
+            console.error('Error updating post:', e);
+            res.status(500).json({ error: 'Error updating post' });
+        }
+    });
+});
 
 app.listen(4000, () => {
     console.log('Server is running on http://localhost:4000');
