@@ -12,10 +12,12 @@ export default function IndexPage() {
     });
   }, []);
   return (
-    <>
-      {posts.length > 0 && posts.map(post => (
+    <div className='w-[98vw] justify-center flex'>
+    <div className='xl:w-[70vw] w-[90vw]'>
+    {posts.length > 0 && posts.map(post => (
         <Post {...post} />
       ))}
-    </>
+    </div>
+    </div>
   );
 }

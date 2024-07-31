@@ -1,4 +1,3 @@
-import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
@@ -31,19 +30,17 @@ export default function CreatePost() {
     return <Navigate to={'/'} />
   }
   return (
-    <form onSubmit={createNewPost}>
-      <input type="title"
-             placeholder={'Title'}
-             value={title}
-             onChange={ev => setTitle(ev.target.value)} />
-      <input type="summary"
-             placeholder={'Summary'}
-             value={summary}
-             onChange={ev => setSummary(ev.target.value)} />
-      <input type="file"
-             onChange={ev => setFiles(ev.target.files)} />
+    <div className='w-full h-auto justify-center flex pt-8'>
+            <form className='w-[80vw] flex flex-col gap-4' onSubmit={createNewPost}>
+                <input type="title" placeholder={'Title'} value={title} onChange={ev => setTitle(ev.target.value)} className='h-[35px] border-[2px] border-gray-300 rounded-md' />
+                <input type="summary" placeholder={'Summary'}
+                    value={summary}
+                    onChange={ev => setSummary(ev.target.value)}
+                    className='h-[35px] border-[2px] border-gray-300 rounded-md' />
+                <input type="file" placeholder={'file'} onChange={ev => setFiles(ev.target.files)}/>
       <Editor value={content} onChange={setContent} />
-      <button style={{marginTop:'5px'}}>Create post</button>
+      <button className='mt-10 w-[100%] p-2 bg-gray-700 rounded-md text-white hover:bg-gray-600'>Create Post</button>
     </form>
+    </div>
   );
 }

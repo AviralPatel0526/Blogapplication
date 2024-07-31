@@ -3,26 +3,30 @@ import {format} from 'date-fns'
 import { Link } from 'react-router-dom'
 function Post({_id,title,summary,cover,content,createdAt,author}) {
   return (
-    <div className='flex gap-5 justify-center p-8'>
-        <div >
-        <Link to={`/post/${_id}`}>
-        <img src={'http://localhost:4000/'+cover} alt="" className='w-[500px]'/>
-        </Link>
-        </div>
-        <div className='w-[30vw] flex flex-col gap-2'>
-        <Link to={`/post/${_id}`}>
-        <h2 className='text-2xl font-semibold'>{title}</h2>
-        </Link>
-        <div className='flex gap-2'>
-        <a href="">{author.username}</a>
-        <time>{format(new Date(createdAt), 'MMM d, yyyy HH:mm')}</time>
-        </div>
-        
-        <p className='mt-8'>
-         {summary}</p>
-          </div>
+    <section className="text-gray-600 body-font">
+  <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+    <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+    <Link to={`/post/${_id}`}>
+      <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
+      {title}
+      </h1>
+      </Link>
+      <p className="mb-8 leading-relaxed">{summary}</p>
+      <div className="flex flex-col ">
+      <p>Created By: {author.username}</p>
+      <time>{format(new Date(createdAt), 'MMM d, yyyy HH:mm')}</time>
       </div>
+    </div>
+    <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
+    <Link to={`/post/${_id}`}>
+      <img className="object-cover object-center rounded" alt="hero" src={'http://localhost:4000/'+cover}/>
+      </Link>
+    </div>
+  </div>
+</section>
   )
 }
+
+
 
 export default Post
