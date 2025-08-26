@@ -1,30 +1,35 @@
+
 import './App.css'
-import Header from './Header'
-import IndexPage from './pages/IndexPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import Post from './Post'
-import {Route, Routes, BrowserRouter} from 'react-router-dom'
-import { UserContextProvider } from './UserContext'
+import Navbar from './components/Navbar'
+import Post from './components/Post'
+import {Route, Routes} from 'react-router-dom' 
+import Login from './pages/Login'
+import Register from './pages/Register'
 import CreatePost from './pages/CreatePost'
+import { UserContextProvider } from './UserContext'
+import IndexPage from './pages/IndexPage'
 import PostPage from './pages/PostPage'
 import EditPost from './pages/EditPost'
+import Footer from './components/Footer'
 function App() {
 
   return (
-    <BrowserRouter>
     <UserContextProvider>
-    <Header/>
+
+    <Navbar/>
     <Routes>
-    <Route path="/" element={<IndexPage/>} />
-    <Route path="/login" element={<LoginPage/>} />
-    <Route path="/register" element={<RegisterPage/>} />
-    <Route path="/create" element={<CreatePost/>}/>
-    <Route path="/post/:id" element={<PostPage/>}/>
-    <Route path="/edit/:id" element={<EditPost/>}/>
+      <Route path="/" element={<IndexPage/>} />
+      <Route path="/post" element={<Post/>} />
+      <Route path="/create" element={<CreatePost/>} />
+      <Route path="/login" element={<Login/>} />
+      <Route path="/post/:id" element={<PostPage/>} />
+      <Route path="/register" element={<Register/>} />
+      <Route path="/edit/:id" element={<EditPost/>} />
     </Routes>
+    <Footer/>
     </UserContextProvider>
-    </BrowserRouter>
+  
+
   )
 }
 

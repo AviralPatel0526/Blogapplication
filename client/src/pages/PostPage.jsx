@@ -1,45 +1,63 @@
-import { formatISO9075 } from 'date-fns';
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import { UserContext } from '../UserContext';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+export default function PostPage() {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const { userInfo } = useContext(UserContext);
+  useEffect(() => {
+    const fetchPost = async () => {
+      const response = await axios.get(`http://localhost:3000/post/${id}`);
+      setPost(response.data);
+    };
+    fetchPost();
+  }, [id]);
 
-function PostPage() {
-    const {id} = useParams();
-    const [postInfo,setPostInfo]=useState(null)
-    const {userInfo} = useContext(UserContext)
-    useEffect(() => {
-        fetch(`http://localhost:4000/post/${id}`).then(response => {
-            response.json().then(postInfo => {
-                setPostInfo(postInfo)
-            })
-        })
-    },[])
+  if (!post) return <div>Loading...</div>;
 
-    if(!postInfo) return ''
   return (
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-    <div className="max-w-3xl mx-auto">
-        <div className="py-8 flex flex-col justify-between items-center text-center">
-            <h1 className="text-3xl font-bold mb-2">{postInfo.title}</h1>
-            <p className="text-gray-500 text-sm">Published on <time>{formatISO9075(new Date(postInfo.createdAt)) }</time> by {postInfo.author.username}</p>
-            {userInfo.id === postInfo.author._id && (
-            <div className='mt-6'>
-              <Link to={`/edit/${postInfo._id}`} className='px-4 py-2 bg-gray-800 hover:bg-gray-600 text-white rounded-md'>Edit this post</Link>
-            </div>
-        )}
-        </div>
+    <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16 relative">
+      <div
+        className="bg-cover bg-center text-center overflow-hidden"
+        style={{
+          minHeight: '500px',
+          backgroundImage: `url(http://localhost:3000/${post.cover.replace(/\\/g, '/')})`
+        }}
+      />
 
-        <img src={`http://localhost:4000/${postInfo.cover}`} alt="Featured image" className="w-full h-auto mb-8"/>
+      <div className="max-w-3xl mx-auto">
+        <div className="mt-3 rounded-b lg:rounded-b-none lg:rounded-r flex flex-col justify-between leading-normal">
+          <div className="bg-[#EEE6CA] relative top-0 -mt-32 p-5 sm:p-10">
+            <h1 className="text-[#896C6C] font-bold text-3xl mb-2">{post.title}</h1>
+            <p className="text-gray-700 text-xs mt-2">
+              Written By:
+              <span className="text-indigo-600 font-medium hover:text-gray-900 transition duration-500 ease-in-out">
+                { post.author?.username}
+              </span>
+             
 
-        <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto" dangerouslySetInnerHTML={{__html:postInfo.content}}>
+            </p>
+            {userInfo.id === post.author?._id && (
+              <Link className="absolute top-0 right-0 mt-4 mr-4 text-sm text-gray-800 hover:text-gray-900" to={`/edit/${post._id}`}>
+                Edit
+              </Link>
+            )}
+
            
+
+            <div
+              className="text-base text-gray-800 leading-8 my-5"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+
+          </div>
+
         </div>
+      </div>
     </div>
-</div>
-
-
-  )
+  );
 }
-
-
-export default PostPage
